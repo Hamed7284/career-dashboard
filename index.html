@@ -1,0 +1,519 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Intelligence — Hamed Hashemi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#08080f;--bg2:#0d0d18;--bg3:#111120;--border:#1e1e35;--text:#c8c8e0;--text2:#7070a0;--text3:#333355;--accent:#4a9eff;--accent2:#a855f7;--green:#4caf88;--amber:#f5a623;--red:#e05252}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+a{color:inherit;text-decoration:none}
+button{font-family:'DM Mono',monospace;cursor:pointer;border:none;outline:none}
+
+/* Layout */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:190px;border-right:1px solid var(--border);background:#0a0a16;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.main{margin-left:190px;flex:1;padding:28px 32px;min-height:100vh}
+
+/* Sidebar */
+.logo{padding:18px 16px 14px}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#4a9eff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:10px}
+.logo-title{font-size:10px;font-weight:700;color:#d8d8f0;letter-spacing:2px;line-height:1.4}
+.logo-date{font-size:9px;color:var(--text3);margin-top:4px;letter-spacing:1px}
+.nav-btn{width:100%;padding:10px 16px;background:transparent;border:none;border-left:2px solid transparent;color:#445;text-align:left;font-size:10px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:10px;transition:all .12s;font-family:'DM Mono',monospace}
+.nav-btn:hover{color:var(--text);background:#0f0f20}
+.nav-btn.active{background:#141428;border-left-color:var(--accent);color:#dde}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px}
+.sidebar-bottom{padding:12px 16px;border-top:1px solid var(--border);margin-top:auto}
+.sidebar-name{font-size:10px;color:var(--text2);margin-bottom:3px}
+.sidebar-info{font-size:9px;color:var(--text3);line-height:1.6}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+.section-label{font-size:9px;color:var(--text3);letter-spacing:3px;margin-bottom:8px;text-transform:uppercase}
+.section-title{font-size:20px;font-weight:700;color:#e0e0f8;font-family:'Syne',sans-serif;margin-bottom:4px}
+.section-sub{font-size:11px;color:var(--text2);margin-bottom:24px}
+
+/* Stats grid */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
+.stat-label{font-size:9px;color:var(--text2);letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+.stat-value{font-size:26px;font-weight:700;font-family:'Syne',sans-serif}
+
+/* Score bar */
+.score-bar{display:flex;align-items:center;gap:8px}
+.score-track{flex:1;height:3px;background:#141428;border-radius:2px}
+.score-fill{height:100%;border-radius:2px;transition:width .3s}
+.score-num{font-size:12px;font-weight:700;width:24px}
+
+/* Table */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:11px;min-width:600px}
+th{padding:10px 14px;text-align:left;color:var(--accent);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;background:var(--bg3);border-bottom:1px solid var(--border)}
+td{padding:9px 14px;color:var(--text2);border-bottom:1px solid #0f0f1e;vertical-align:middle;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#0d0d20}
+.country-name{color:#e0e0f8;font-weight:700;font-size:12px}
+
+/* Badges */
+.badge{font-size:10px;padding:3px 8px;border-radius:4px;display:inline-block}
+.badge-green{background:#0d1f18;color:var(--green);border:1px solid #1a4030}
+.badge-amber{background:#1a1208;color:var(--amber);border:1px solid #3a2a10}
+.badge-red{background:#1a0a0a;color:var(--red);border:1px solid #3a1515}
+
+/* App status */
+.status-select{background:var(--bg3);border-radius:6px;padding:4px 8px;font-size:10px;font-family:'DM Mono',monospace;width:100%}
+
+/* Filter buttons */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:10px;background:transparent;border:1px solid var(--border);color:var(--text2);letter-spacing:1px;font-family:'DM Mono',monospace}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* Chat */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 140px)}
+.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:16px}
+.chat-msg{display:flex;gap:10px;align-items:flex-start}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-avatar{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.chat-bubble{max-width:80%;padding:12px 16px;border-radius:12px;font-size:12px;line-height:1.8;white-space:pre-wrap}
+.chat-bubble.agent{background:#0d0d1e;border:1px solid #16162e;color:#b0b0cc;border-radius:4px 12px 12px 12px}
+.chat-bubble.user{background:#0e1620;border:1px solid #162030;color:#b0b0cc;border-radius:12px 4px 12px 12px}
+.chat-input-wrap{display:flex;gap:10px;padding-top:12px;border-top:1px solid var(--border)}
+.chat-input{flex:1;background:#0d0d1e;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace}
+.chat-input:focus{outline:none;border-color:#2a2a50}
+.send-btn{padding:0 18px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:16px;border:none}
+.send-btn:disabled{background:var(--bg3);color:var(--text3);cursor:not-allowed}
+
+/* Dots loading */
+.dots{display:flex;gap:5px;align-items:center;padding:4px 0}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.2;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:#000000dd;display:flex;align-items:center;justify-content:center;z-index:200}
+.modal{background:#0d0d1e;border:1px solid #252545;border-radius:16px;padding:28px;width:420px;max-width:95vw}
+.modal-title{font-size:12px;color:#e0e0f8;margin-bottom:18px;letter-spacing:1px}
+.form-field{margin-bottom:12px}
+.form-label{font-size:9px;color:var(--text3);margin-bottom:5px;letter-spacing:1px;display:block;text-transform:uppercase}
+.form-input{width:100%;background:#080814;border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:#b0b0cc;font-size:11px;font-family:'DM Mono',monospace}
+.form-input:focus{outline:none;border-color:#2a2a50}
+.status-btns{display:flex;gap:6px;flex-wrap:wrap}
+.status-btn{padding:5px 10px;border-radius:20px;font-size:9px;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace}
+.modal-footer{display:flex;gap:8px;margin-top:18px}
+.btn-cancel{flex:1;padding:11px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text3);font-family:'DM Mono',monospace;font-size:11px}
+.btn-save{flex:2;padding:11px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:700}
+
+/* Alert */
+.alert{background:#120808;border:1px solid #3a1515;border-radius:10px;padding:16px 20px;margin-bottom:16px}
+.alert-title{font-size:9px;color:var(--red);letter-spacing:3px;margin-bottom:12px}
+
+/* Doc item */
+.doc-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;margin-bottom:8px;transition:border-color .15s}
+.doc-item:hover{border-color:#4a9eff44}
+.doc-icon{width:36px;height:36px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.doc-name{font-size:12px;color:#e0e0f8;font-weight:700;margin-bottom:3px}
+.doc-meta{font-size:10px;color:var(--text2)}
+.doc-link{font-size:10px;color:var(--accent);margin-left:auto}
+
+/* Hide/show pages */
+.page{display:none}.page.active{display:block}
+.chat-page{display:none;flex-direction:column;height:calc(100vh - 56px)}.chat-page.active{display:flex}
+
+@media(max-width:768px){
+  .sidebar{width:100%;position:relative;height:auto}
+  .main{margin-left:0}
+  .layout{flex-direction:column}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    <div class="logo-title">CAREER<br>INTELLIGENCE</div>
+    <div class="logo-date" id="sidebarDate"></div>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showPage('dashboard')"><span>⬡</span> Dashboard</button>
+    <button class="nav-btn" onclick="showPage('countries')"><span>◎</span> Countries</button>
+    <button class="nav-btn" onclick="showPage('applications')"><span>◉</span> Applications <span class="nav-badge" id="alertBadge" style="display:none">0</span></button>
+    <button class="nav-btn" onclick="showPage('documents')"><span>◈</span> Documents</button>
+    <button class="nav-btn" onclick="showPage('agent')"><span>◆</span> AI Agent</button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-name">Hamed Hashemi</div>
+    <div class="sidebar-info">PhD Organic Chemistry<br>9 publications · 12+ yrs</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="section-label">OVERVIEW</div>
+  <div class="section-title">Good morning, Hamed</div>
+  <div class="section-sub" id="dashDate"></div>
+
+  <div class="stats">
+    <div class="stat-card"><div class="stat-label">Applications</div><div class="stat-value" id="statTotal" style="color:var(--accent)">0</div></div>
+    <div class="stat-card"><div class="stat-label">Interviews</div><div class="stat-value" id="statInterview" style="color:var(--amber)">0</div></div>
+    <div class="stat-card"><div class="stat-label">Offers</div><div class="stat-value" id="statOffer" style="color:var(--green)">0</div></div>
+    <div class="stat-card"><div class="stat-label">Follow-ups</div><div class="stat-value" id="statFollowup" style="color:var(--red)">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">TOP 5 COUNTRIES FOR YOU</div>
+    <div id="top5countries"></div>
+  </div>
+
+  <div id="alertSection" style="display:none">
+    <div class="alert">
+      <div class="alert-title">⚠ FOLLOW-UP ALERTS</div>
+      <div id="alertList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- COUNTRIES -->
+<div id="page-countries" class="page">
+  <div class="section-label">JOB DISCOVERY</div>
+  <div class="section-title">Country Ranking</div>
+  <div class="section-sub">25 countries ranked for your graphene/nanomaterials profile</div>
+  <div class="filters" id="regionFilters"></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Country</th><th>Score</th><th>Key Reason</th><th>Visa</th><th>Salary/yr</th><th>Type</th></tr></thead>
+    <tbody id="countriesTable"></tbody>
+  </table></div>
+</div>
+
+<!-- APPLICATIONS -->
+<div id="page-applications" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
+    <div>
+      <div class="section-label">TRACKER</div>
+      <div class="section-title">Applications</div>
+    </div>
+    <button onclick="document.getElementById('addModal').style.display='flex'" style="padding:10px 20px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:11px;font-weight:700;letter-spacing:1px">+ ADD</button>
+  </div>
+  <div id="appsList"></div>
+</div>
+
+<!-- DOCUMENTS -->
+<div id="page-documents" class="page">
+  <div class="section-label">FILES</div>
+  <div class="section-title">Documents</div>
+  <div class="section-sub">All files stored in Google Drive</div>
+  <div id="docsList"></div>
+  <div class="card" style="margin-top:8px">
+    <div class="section-label" style="margin-bottom:8px">DRIVE FOLDER</div>
+    <a href="https://drive.google.com/drive/folders/1fYukp9vrJoC0RJr8aRD2l3hCMlNefa5s" target="_blank" style="font-size:11px;color:var(--text2);word-break:break-all">https://drive.google.com/drive/folders/1fYukp9vrJoC0RJr8aRD2l3hCMlNefa5s</a>
+  </div>
+</div>
+
+<!-- AI AGENT -->
+<div id="page-agent" class="chat-page">
+  <div style="margin-bottom:16px">
+    <div class="section-label">AUTONOMOUS</div>
+    <div class="section-title">AI Career Agent</div>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div style="margin:auto;text-align:center;color:var(--text3);font-size:11px;line-height:2.2">
+      <div style="font-size:32px;margin-bottom:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">◆</div>
+      Ask about countries, documents, strategy,<br>or specific professors to contact.
+    </div>
+  </div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chatInput" placeholder="Ask the career agent..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="send-btn" id="sendBtn" onclick="sendChat()">→</button>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end layout -->
+
+<!-- ADD MODAL -->
+<div id="addModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <div class="modal-title">◈ ADD APPLICATION</div>
+    <div class="form-field"><label class="form-label">Position Title</label><input class="form-input" id="appTitle" placeholder="e.g. Postdoc — Graphene Nanomaterials"></div>
+    <div class="form-field"><label class="form-label">Institution</label><input class="form-input" id="appInst" placeholder="e.g. TU Delft"></div>
+    <div class="form-field"><label class="form-label">Country</label><input class="form-input" id="appCountry" placeholder="e.g. Netherlands"></div>
+    <div class="form-field"><label class="form-label">Date Applied</label><input class="form-input" id="appDate" type="date"></div>
+    <div class="form-field"><label class="form-label">Notes</label><input class="form-input" id="appNotes" placeholder="Contact, deadline, next step..."></div>
+    <div class="form-field">
+      <label class="form-label">Status</label>
+      <div class="status-btns" id="statusBtns"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
+      <button class="btn-save" onclick="addApp()">Save Application</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ANTHROPIC_API_KEY = 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 ;
+
+const COUNTRIES = [
+  {rank:1,country:"Germany",region:"Europe",score:88,visa:"Good",salary:"55–75k",type:"Both",reason:"Largest graphene/polymer R&D market, BASF/Evonik/Covestro, DAAD & DFG funding"},
+  {rank:2,country:"Netherlands",region:"Europe",score:85,visa:"Good",salary:"50–70k",type:"Both",reason:"TU Delft, strong nanomaterials ecosystem, English-friendly"},
+  {rank:3,country:"Switzerland",region:"Europe",score:83,visa:"Moderate",salary:"70–90k",type:"Both",reason:"ETH Zurich, EPFL, highest salaries in Europe"},
+  {rank:4,country:"Sweden",region:"Europe",score:80,visa:"Good",salary:"45–65k",type:"Both",reason:"Chalmers, KTH, Graphene Flagship HQ in Gothenburg"},
+  {rank:5,country:"Canada",region:"North America",score:78,visa:"Very good",salary:"55–75k",type:"Both",reason:"NSERC funding, UofT/McGill/UBC, friendly immigration"},
+  {rank:6,country:"Denmark",region:"Europe",score:77,visa:"Good",salary:"50–65k",type:"Both",reason:"DTU, biomedical nanomaterials strong, English widely used"},
+  {rank:7,country:"Singapore",region:"Asia",score:76,visa:"Very good",salary:"55–75k",type:"Both",reason:"NUS/NTU world-class, nanomedicine hub, fast visa"},
+  {rank:8,country:"Australia",region:"Other",score:74,visa:"Good",salary:"60–80k",type:"Both",reason:"UNSW, ANU, Monash active in graphene, growing biomedical"},
+  {rank:9,country:"Finland",region:"Europe",score:72,visa:"Good",salary:"45–60k",type:"Academia",reason:"Aalto University graphene research, Nokia/industry connections"},
+  {rank:10,country:"USA",region:"North America",score:71,visa:"Hard",salary:"60–90k",type:"Both",reason:"MIT, Stanford, Harvard — best labs but H1B very difficult"},
+  {rank:11,country:"Belgium",region:"Europe",score:70,visa:"Good",salary:"45–60k",type:"Both",reason:"IMEC world's top nanotech, KU Leuven, strong EU funding"},
+  {rank:12,country:"Austria",region:"Europe",score:68,visa:"Good",salary:"45–58k",type:"Academia",reason:"TU Vienna, growing nanomaterials sector"},
+  {rank:13,country:"South Korea",region:"Asia",score:67,visa:"Moderate",salary:"40–60k",type:"Both",reason:"KAIST, POSTECH, Samsung/LG Materials active R&D"},
+  {rank:14,country:"Norway",region:"Europe",score:65,visa:"Good",salary:"55–70k",type:"Industry",reason:"NTNU strong, advanced materials, high salaries"},
+  {rank:15,country:"France",region:"Europe",score:64,visa:"Moderate",salary:"35–50k",type:"Academia",reason:"CNRS large network, CEA — language barrier"},
+  {rank:16,country:"Japan",region:"Asia",score:62,visa:"Moderate",salary:"40–55k",type:"Academia",reason:"NIMS, Osaka — JSPS fellowship available, language barrier"},
+  {rank:17,country:"UK",region:"Europe",score:61,visa:"Moderate",salary:"40–55k",type:"Academia",reason:"Post-Brexit visa costs — Imperial, UCL, Cambridge still strong"},
+  {rank:18,country:"Italy",region:"Europe",score:55,visa:"Moderate",salary:"30–45k",type:"Academia",reason:"IIT Genova strong, bureaucracy heavy, lower salaries"},
+  {rank:19,country:"Spain",region:"Europe",score:53,visa:"Moderate",salary:"28–42k",type:"Academia",reason:"ICN2 Barcelona graphene, CSIC network, growing"},
+  {rank:20,country:"China",region:"Asia",score:52,visa:"Easy",salary:"30–50k",type:"Both",reason:"Top labs — postdoc experience there already"},
+  {rank:21,country:"Taiwan",region:"Asia",score:50,visa:"Good",salary:"30–45k",type:"Both",reason:"NTHU, NTU graphene, semiconductor industry R&D"},
+  {rank:22,country:"New Zealand",region:"Other",score:48,visa:"Good",salary:"45–58k",type:"Academia",reason:"Small market, limited nanomaterials positions"},
+  {rank:23,country:"Portugal",region:"Europe",score:45,visa:"Moderate",salary:"25–38k",type:"Academia",reason:"INL Braga nanomaterials, low salaries, growing"},
+  {rank:24,country:"India",region:"Asia",score:40,visa:"Easy",salary:"15–25k",type:"Academia",reason:"IISc, IITs strong but highly competitive domestically"},
+  {rank:25,country:"UAE",region:"Other",score:38,visa:"Easy",salary:"50–80k",type:"Industry",reason:"Tax-free but almost no graphene research culture"},
+];
+
+const DOCS = [
+  {name:"Master CV (ATS Optimized)",type:"CV",date:"Jun 2026"},
+  {name:"Research Statement",type:"Academic",date:"Jun 2026"},
+  {name:"Cover Letter — Postdoc Graphene",type:"Cover Letter",date:"Jun 2026"},
+  {name:"Cold Email — TU Delft",type:"Email",date:"Jun 2026"},
+  {name:"LinkedIn Optimized Profile",type:"LinkedIn",date:"Jun 2026"},
+];
+
+const STATUS_COLORS={applied:"#4a9eff",interview:"#f5a623",offer:"#4caf88",rejected:"#e05252",saved:"#a855f7"};
+let currentStatus="applied";
+let apps=JSON.parse(localStorage.getItem('cia_apps')||'[]');
+let regionFilter="all";
+let chatHistory=[];
+
+// Init
+const today=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+document.getElementById('sidebarDate').textContent=today;
+document.getElementById('dashDate').textContent=today;
+
+function scoreColor(s){return s>=75?'#4caf88':s>=60?'#f5a623':'#e05252'}
+function visaBadge(v){
+  if(v==='Very good'||v==='Good')return'badge badge-green';
+  if(v==='Moderate')return'badge badge-amber';
+  return'badge badge-red';
+}
+function daysSince(d){if(!d)return 0;return Math.floor((Date.now()-new Date(d))/86400000)}
+function saveApps(){localStorage.setItem('cia_apps',JSON.stringify(apps))}
+
+// Pages
+function showPage(id){
+  document.querySelectorAll('.page,.chat-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(id==='dashboard')renderDashboard();
+  if(id==='applications')renderApps();
+}
+
+// Dashboard
+function renderDashboard(){
+  const stale=apps.filter(a=>a.status==='applied'&&daysSince(a.date)>=29);
+  document.getElementById('statTotal').textContent=apps.length;
+  document.getElementById('statInterview').textContent=apps.filter(a=>a.status==='interview').length;
+  document.getElementById('statOffer').textContent=apps.filter(a=>a.status==='offer').length;
+  document.getElementById('statFollowup').textContent=stale.length;
+  const badge=document.getElementById('alertBadge');
+  if(stale.length>0){badge.style.display='';badge.textContent=stale.length}else{badge.style.display='none'}
+
+  // Top 5
+  const top5=document.getElementById('top5countries');
+  top5.innerHTML=COUNTRIES.slice(0,5).map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:16px;padding:10px 0;${i<4?'border-bottom:1px solid #141428':''}">
+      <span style="font-size:11px;color:var(--text3);width:16px">${c.rank}</span>
+      <span style="font-size:12px;color:#e0e0f8;font-weight:700;width:100px">${c.country}</span>
+      <div class="score-bar" style="flex:1">
+        <div class="score-track"><div class="score-fill" style="width:${c.score}%;background:${scoreColor(c.score)}"></div></div>
+        <span class="score-num" style="color:${scoreColor(c.score)}">${c.score}</span>
+      </div>
+      <span style="font-size:10px;color:var(--text2);width:80px">$${c.salary}</span>
+    </div>`).join('');
+
+  // Alerts
+  const alertSec=document.getElementById('alertSection');
+  const alertList=document.getElementById('alertList');
+  if(stale.length>0){
+    alertSec.style.display='block';
+    alertList.innerHTML=stale.map(a=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e1010">
+        <div>
+          <div style="font-size:12px;color:#e0e0f8;margin-bottom:2px">${a.title}</div>
+          <div style="font-size:10px;color:var(--text2)">${a.institution} · ${a.country}</div>
+        </div>
+        <div style="font-size:10px;color:var(--red)">${daysSince(a.date)}d ago</div>
+      </div>`).join('');
+  } else {alertSec.style.display='none'}
+}
+
+// Countries
+function renderCountries(){
+  const regions=['all','Europe','North America','Asia','Other'];
+  const filterDiv=document.getElementById('regionFilters');
+  filterDiv.innerHTML=regions.map(r=>`<button class="filter-btn${regionFilter===r?' active':''}" onclick="setRegion('${r}')">${r==='all'?'ALL':r.toUpperCase()}</button>`).join('');
+
+  const filtered=regionFilter==='all'?COUNTRIES:COUNTRIES.filter(c=>c.region===regionFilter);
+  document.getElementById('countriesTable').innerHTML=filtered.map(c=>`
+    <tr>
+      <td>${c.rank}</td>
+      <td><span class="country-name">${c.country}</span></td>
+      <td><div class="score-bar"><div class="score-track" style="width:70px"><div class="score-fill" style="width:${c.score}%;background:${scoreColor(c.score)}"></div></div><span class="score-num" style="color:${scoreColor(c.score)}">${c.score}</span></div></td>
+      <td style="max-width:200px">${c.reason}</td>
+      <td><span class="${visaBadge(c.visa)}">${c.visa}</span></td>
+      <td>$${c.salary}</td>
+      <td>${c.type}</td>
+    </tr>`).join('');
+}
+
+function setRegion(r){
+  regionFilter=r;
+  renderCountries();
+}
+
+// Applications
+function renderApps(){
+  const list=document.getElementById('appsList');
+  if(apps.length===0){
+    list.innerHTML='<div style="text-align:center;padding:60px 0;color:var(--text3);font-size:12px">No applications yet. Click + ADD to start tracking.</div>';
+    return;
+  }
+  list.innerHTML=apps.slice().reverse().map(a=>`
+    <div class="card-sm">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+        <div style="flex:1">
+          <div style="font-size:13px;color:#e0e0f8;font-weight:700;margin-bottom:3px">${a.title}</div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px">${a.institution} · ${a.country}</div>
+          ${a.notes?`<div style="font-size:10px;color:var(--text3)">${a.notes}</div>`:''}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          <select class="status-select" style="border:1px solid ${STATUS_COLORS[a.status]};color:${STATUS_COLORS[a.status]}" onchange="updateStatus(${a.id},this.value)">
+            ${Object.keys(STATUS_COLORS).map(s=>`<option value="${s}"${a.status===s?' selected':''}>${s}</option>`).join('')}
+          </select>
+          <button onclick="deleteApp(${a.id})" style="background:none;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:4px 10px;font-size:10px">✕</button>
+        </div>
+      </div>
+      ${daysSince(a.date)>=29&&a.status==='applied'?`<div style="font-size:10px;color:var(--red);margin-top:8px">⚠ ${daysSince(a.date)} days since application — consider following up</div>`:''}
+    </div>`).join('');
+}
+
+function updateStatus(id,status){
+  apps=apps.map(a=>a.id===id?{...a,status}:a);
+  saveApps();renderApps();renderDashboard();
+}
+function deleteApp(id){
+  apps=apps.filter(a=>a.id!==id);
+  saveApps();renderApps();renderDashboard();
+}
+
+// Status buttons in modal
+function renderStatusBtns(){
+  document.getElementById('statusBtns').innerHTML=Object.keys(STATUS_COLORS).map(s=>`
+    <button class="status-btn" onclick="selectStatus('${s}')" id="sb-${s}" style="background:${currentStatus===s?STATUS_COLORS[s]+'22':'#0d0d1e'};border:1px solid ${currentStatus===s?STATUS_COLORS[s]:'var(--border)'};color:${currentStatus===s?STATUS_COLORS[s]:'var(--text3)'}">${s}</button>`).join('');
+}
+function selectStatus(s){currentStatus=s;renderStatusBtns()}
+
+function addApp(){
+  const title=document.getElementById('appTitle').value.trim();
+  if(!title)return;
+  apps.push({id:Date.now(),title,institution:document.getElementById('appInst').value,country:document.getElementById('appCountry').value,date:document.getElementById('appDate').value,notes:document.getElementById('appNotes').value,status:currentStatus});
+  saveApps();
+  document.getElementById('addModal').style.display='none';
+  ['appTitle','appInst','appCountry','appDate','appNotes'].forEach(id=>document.getElementById(id).value='');
+  currentStatus='applied';
+  renderApps();renderDashboard();
+}
+
+// Documents
+function renderDocs(){
+  const driveUrl='https://drive.google.com/drive/folders/1fYukp9vrJoC0RJr8aRD2l3hCMlNefa5s';
+  document.getElementById('docsList').innerHTML=DOCS.map(d=>`
+    <a href="${driveUrl}" target="_blank" class="doc-item" style="display:flex;text-decoration:none">
+      <div class="doc-icon">◈</div>
+      <div style="flex:1"><div class="doc-name">${d.name}</div><div class="doc-meta">${d.type} · ${d.date}</div></div>
+      <div class="doc-link">Open →</div>
+    </a>`).join('');
+}
+
+// AI Chat
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg||document.getElementById('sendBtn').disabled)return;
+  input.value='';
+
+  addChatMsg('user',msg);
+  document.getElementById('sendBtn').disabled=true;
+
+  const loadingId='loading-'+Date.now();
+  addChatMsg('agent','<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>',loadingId);
+
+  chatHistory.push({role:'user',content:msg});
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are an autonomous AI Career Intelligence Agent for Hamed Hashemi, PhD Organic Chemistry, specialist in graphene/GO functionalization, drug delivery, micro/nanomotors, polymer chemistry. 9 publications. Applications: ${apps.length} tracked. Always personalize. Be specific and concise.`,
+        messages:chatHistory
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.map(b=>b.text||'').join('\n')||'No response.';
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById(loadingId).outerHTML=`<div class="chat-msg"><div class="chat-avatar" style="background:#0d0d22;border:1px solid #4a9eff33">⬡</div><div class="chat-bubble agent">${reply}</div></div>`;
+  } catch(e){
+    document.getElementById(loadingId).outerHTML=`<div class="chat-msg"><div class="chat-avatar" style="background:#0d0d22;border:1px solid #4a9eff33">⬡</div><div class="chat-bubble agent">⚠ Error. Check your API key in the HTML file.</div></div>`;
+  }
+  document.getElementById('sendBtn').disabled=false;
+  document.getElementById('chatMessages').scrollTop=99999;
+}
+
+function addChatMsg(role,content,id=''){
+  const div=document.createElement('div');
+  div.className=`chat-msg${role==='user'?' user':''}`;
+  if(id)div.id=id;
+  div.innerHTML=role==='user'
+    ?`<div class="chat-avatar" style="background:#121a28;border:1px solid #1a2838">◇</div><div class="chat-bubble user">${content}</div>`
+    :`<div class="chat-avatar" style="background:#0d0d22;border:1px solid #4a9eff33">⬡</div><div class="chat-bubble agent">${content}</div>`;
+  const msgs=document.getElementById('chatMessages');
+  msgs.appendChild(div);
+  msgs.scrollTop=99999;
+}
+
+// Init renders
+renderDashboard();
+renderCountries();
+renderDocs();
+renderStatusBtns();
+
+// Open modal → reset status buttons
+document.querySelector('[onclick*="addModal"]').addEventListener('click',renderStatusBtns);
+</script>
+</body>
+</html>
